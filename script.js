@@ -12,6 +12,7 @@ function showPage(id) {
     document.getElementById(id).classList.add('active');
 }
 
+
 function validateEmail(e) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
@@ -22,25 +23,17 @@ function genCode() {
 
 let users = JSON.parse(localStorage.getItem('users')) || [];
 if (!users.find(u => u.email === 'test@example.com')) {
-    users.push({ name: 'Demo User', email: 'test@example.com', password: 'password123' });
+    users.push({ name: 'Demo User', email: 'test@example.com', 
+        password: 'password123' });
     localStorage.setItem('users', JSON.stringify(users));
 }
 
 function updateDashboardCredentials() {
     if (currentUser) {
-        const emailEl = document.getElementById('dashboardEmail');
-        const nameEl = document.getElementById('dashboardName');
-        if (emailEl) emailEl.textContent = currentUser.email;
-        if (nameEl) nameEl.textContent = currentUser.name;
-    }
-}
-
-function showError(div, msg) {
-    div.textContent = msg;
-    if (msg) {
-        div.classList.add("show");
-    } else {
-        div.classList.remove("show");
+        document.getElementById('dashboardEmail').textContent 
+        = currentUser.email;
+        document.getElementById('dashboardName').textContent 
+        = currentUser.name;
     }
 }
 
@@ -48,19 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ['registerLink','loginLink','forgotPasswordLink','backToLoginLink'].forEach(id => {
         document.getElementById(id).onclick = e => {
             e.preventDefault();
-            showPage(
-                id === 'registerLink' ? 'registerPage' :
-                id === 'loginLink' || id === 'backToLoginLink' ? 'loginPage' : 'forgotPasswordPage'
-            );
+            showPage(id === 'registerLink' ? 'registerPage' : id === 'loginLink' || id === 'backToLoginLink' ? 'loginPage' : 'forgotPasswordPage');
         };
     });
 
     document.getElementById('resendCodeLink').onclick = e => {
         e.preventDefault();
-        if (resetEmail) {
-            verificationCode = genCode();
-            alert("New code " + verificationCode); 
-        }
+        if (resetEmail) verificationCode = genCode();
     };
 
     document.getElementById('logoutBtn').onclick = e => {
@@ -74,101 +61,135 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const email = loginEmail.value.trim(), password = loginPassword.value;
         const user = users.find(u => u.email === email && u.password === password);
-        const error = document.getElementById('loginError');
         if (user) {
             currentUser = user;
-            showError(error, "");
             showPage('dashboardPage');
             updateDashboardCredentials();
-        } else {
-            showError(error, "Սխալ է ");
         }
     };
 
-
     document.getElementById('registerForm').onsubmit = e => {
         e.preventDefault();
-        const name = registerName.value.trim(), 
-              email = registerEmail.value.trim(), 
-              password = registerPassword.value, 
-              confirm = confirmPassword.value;
-        const error = document.getElementById('registerError');
-
-        if (users.find(u => u.email === email)) {
-            showError(error, " Այս տվյալով գրանցում կա");
-        } else if (password !== confirm) {
-            showError(error, " Սխալ գաղտնաբառ");
-        } else if (password.length < 6) {
-            showError(error, " Գաղտնաբառը պետք է լինի առնվազն 6 նիշ");
-        } else if (!validateEmail(email)) {
-            showError(error, " Սխալ mail");
-        } else {
+        const name = registerName.value.trim(), email = registerEmail.value.trim(), password = registerPassword.value, confirm = confirmPassword.value;
+        if (!users.find(u => u.email === email) && password === confirm && password.length >= 6 && validateEmail(email)) {
             users.push({ name, email, password });
             localStorage.setItem('users', JSON.stringify(users));
-            showError(error, "");
             showPage('loginPage');
             registerForm.reset();
         }
     };
 
-
     document.getElementById('forgotPasswordForm').onsubmit = e => {
         e.preventDefault();
         const email = forgotEmail.value.trim();
-        const error = document.getElementById('forgotError');
-
-        if (!validateEmail(email)) {
-            showError(error, "Սխալ mail");
-        } else if (!users.find(u => u.email === email)) {
-            showError(error, " Այս email-ով օգտատեր գոյություն չունի");
-        } else {
+        if (users.find(u => u.email === email) && validateEmail(email)) {
             resetEmail = email;
             verificationCode = genCode();
-            showError(error, "");
             showPage('verificationPage');
-            alert("Verification code: " + verificationCode); 
         }
     };
 
     document.getElementById('verificationForm').onsubmit = e => {
         e.preventDefault();
-        const codeInput = document.getElementById('verificationCode').value.trim();
-        const error = document.getElementById('verificationError');
-        if (codeInput === verificationCode) {
-            showError(error, "");
-            showPage('resetPasswordPage');
-        } else {
-            showError(error, " Սխալ  հաստատման կոդ");
-        }
+        const code = verificationCode.value.trim();
+        if (code === verificationCode) showPage('resetPasswordPage');
     };
-
 
     document.getElementById('resetPasswordForm').onsubmit = e => {
         e.preventDefault();
         const np = newPassword.value, cp = confirmNewPassword.value;
         const idx = users.findIndex(u => u.email === resetEmail);
-        const error = document.getElementById('resetError');
-
-        if (np !== cp) {
-            showError(error, "Գաղտնաբառերը չեն համընկնում");
-        } else if (np.length < 6) {
-            showError(error, " Գաղտնաբառը պետք է լինի առնվազն 6 նիշ");
-        } else if (idx === -1) {
-            showError(error, " Սխալ գործողություն");
-        } else {
+        if (np === cp && np.length >= 6 && idx !== -1) {
             users[idx].password = np;
             localStorage.setItem('users', JSON.stringify(users));
             resetEmail = null; verificationCode = null;
-            showError(error, "");
             showPage('loginPage');
             resetPasswordForm.reset();
         }
     };
-
     showPage('loginPage');
 });
 
-const kochak = document.getElementById("sevspitak");
+const form = document.getElementById("registerForm");
+form.addEventListener("submit",function(event){
+    event.preventDefault();
+    document.getElementById("errorname").textContent = "";
+    document.getElementById("erroremail").textContent = "";
+    document.getElementById("errorpassword").textContent = "";
+
+    let hasError = false;
+
+    let name = document.getElementById("registerName").value.trim();
+    let email = document.getElementById("registerEmail").value.trim();
+    let password = document.getElementById("registerPassword").value.trim();
+    let confirmpassword = document.getElementById("confirmPassword").value.trim();
+
+    if(name === "") {
+        document.getElementById("errorname").textContent = "Name is required";
+        hasError = true;
+    }
+
+    if(email === "") {
+        document.getElementById("erroremail").textContent = "Email is requied";
+        hasError = true;
+    } else if (!email.includes("@") || !email.includes(".")) {
+        document.getElementById("erroremail").textContent = "Enter a valid email";
+        hasError = true;
+    }
+
+    if(password === "") {
+        document.getElementById("errorpassword").textContent = "Password is requied";
+        hasError = true;
+    } else if (password.length < 6) {
+        document.getElementById("errorpassword").textContent = "Password must be at least 6";
+        hasError = true;
+    }
+
+    if(confirmpassword !== password){
+        document.getElementById("errorpassword").textContent = "Password sxal";
+        hasError = true;
+    }
+
+    if(!hasError) {
+        alert("Form submitted successfully!");
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const kochak = document.getElementById("lusin");
 
 kochak.addEventListener("click", () => {
   document.body.classList.toggle("sev");
@@ -180,4 +201,4 @@ kochak.addEventListener("click", () => {
   }
 }); //չաշխատեց սա նորմալ 
 
-//մնացածնե ինչ գրել եմ նենցա տենց չեմ հասկացել ինչ ա գրած
+//մնացածնե ինչ գրել եմ նենցա տենց չեմ հասկացել ինչ ա գրած  

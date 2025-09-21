@@ -11,10 +11,11 @@
     <div id="loginPage" class="page active">
         <div class="container">
             <div class="logo">
-                <h1>MyApp</h1>
+                <img src="nkarner/glxark.png" alt="">
+                <h1>EduAdmin</h1>
             </div>
             <form id="loginForm" class="form">
-                <h2>Login</h2>
+                <h2>Welcome Back</h2>
                 <div class="error-message" id="loginError"></div>
                 <div class="input-group">
                     <input type="email" id="loginEmail" placeholder="Email" required>
@@ -42,15 +43,19 @@
                 <div class="error-message" id="registerError"></div>
                 <div class="input-group">
                     <input type="text" id="registerName" placeholder="Full Name" required>
+                    <p id="errorname"></p>
                 </div>
                 <div class="input-group">
                     <input type="email" id="registerEmail" placeholder="Email" required>
+                    <p id="erroremail"></p>
                 </div>
                 <div class="input-group">
                     <input type="password" id="registerPassword" placeholder="Password" required>
+                    <p id="errorpassword"></p>
                 </div>
                 <div class="input-group">
                     <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    <p id="errorpassword"></p>
                 </div>
                 <button type="submit" class="btn">Register</button>
                 <div class="links">
@@ -137,8 +142,8 @@
             </div>
         </div>
     </div> -->
-
-    <div id="dashboardPage" class="page">
+    
+    <!-- <div id="dashboardPage" class="page">
     <div class="dashboard-bg">
         <div class="container dashboard-container">
             <div class="dashboard-header">
@@ -160,7 +165,59 @@
             </div>
         </div>
     </div>
-</div>
+    </div> -->
+
+<!-- mtac ejy  -->
+    <div class="page" id="dashboardPage">
+        <div class="verevimas">
+            <img src="nkarner/glxark.png" alt="">
+            <h1>EduAdmin</h1>
+            <button id="lusin">🌙</button>
+            <button><img src="nkarner/lezu.png" alt=""></button>
+            <button><img src="nkarner/marduk.png" alt=""></button>
+            <button id="logoutBtn">Logout</button>
+
+        </div>
+        <div style="display: flex;">
+            <aside class="ajumas">
+                <a href="#"><span>Dashboard</span></a><br>
+                <a href="#"><span>Students</span></a><br>
+                <a href="#"><span>Teachers</span></a><br>
+                <a href="#"><span>Classes</span></a><br>
+            </aside>
+
+        <!-- Dashboard hatvac -->
+            <div id="dashboard" class="dashboardimas">
+                <div class="vernagir">
+                    <h2 style="margin-bottom: 10px;">Dashboard</h2>
+                    <p class="tarer" style="margin-bottom: 10px;">Welcome to your scholl management system</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="spitak">
+                        <p class="tver">1,234</p>
+                        <p class="tarer">Total Students</p>
+                    </div>
+                    <div class="spitak">
+                        <p  class="tver">89</p>
+                        <p class="tarer">Total Teachers</p>
+                    </div>
+                    <div class="spitak">
+                        <p class="tver">45</p>
+                        <p class="tarer">Total Classes</p>
+                    </div>
+                    <div class="spitak">
+                        <p class="tver">12</p>
+                        <p class="tarer">Active Sections</p>
+                    </div>
+                </div>
+                <div class="recent">
+                    <p class="activites"><b>Recent Activites</b></p>
+                    <hr style="margin-bottom: 10px;">
+                    <p class="tarer">No recent activites to display.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 <script src="script.js"></script>
 </body>
 </html>
